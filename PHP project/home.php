@@ -1,21 +1,16 @@
 <?php
 session_start();
 
-// Check if user is logged in
 if (!isset($_SESSION['user'])) {
-    // Redirect to login page if not logged in
     header("Location: login.php");
     exit();
 }
 
-// Get user data
 $user = $_SESSION['user'];
 
-// Get any messages from session
 $success_message = $_SESSION['profile_success'] ?? '';
 $error_message = $_SESSION['profile_error'] ?? '';
 
-// Clear session messages
 unset($_SESSION['profile_success']);
 unset($_SESSION['profile_error']);
 ?>
@@ -33,9 +28,10 @@ unset($_SESSION['profile_error']);
             margin: 0 auto;
         }
         .profile-card {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            background-color: #e6eef8;
+            border-radius: 16px;
+            box-shadow: 8px 8px 16px #c5d1e0, 
+                        -8px -8px 16px #ffffff;
             padding: 25px;
             margin-bottom: 20px;
             animation: fadeIn 0.5s ease-in-out;
@@ -51,7 +47,9 @@ unset($_SESSION['profile_error']);
             border-radius: 50%;
             object-fit: cover;
             margin-right: 20px;
-            border: 3px solid #4CAF50;
+            border: 3px solid #3a5683;
+            box-shadow: 4px 4px 8px #c5d1e0, 
+                        -4px -4px 8px #ffffff;
         }
         .profile-info {
             flex: 1;
@@ -59,16 +57,18 @@ unset($_SESSION['profile_error']);
         .profile-name {
             font-size: 24px;
             margin-bottom: 5px;
-            color: #333;
+            color: #2c4268;
         }
         .profile-event {
             display: inline-block;
-            background-color: #4CAF50;
+            background-color: #3a5683;
             color: white;
             padding: 5px 10px;
             border-radius: 20px;
             font-size: 14px;
             margin-bottom: 10px;
+            box-shadow: 2px 2px 4px #c5d1e0, 
+                        -2px -2px 4px #ffffff;
         }
         .profile-details {
             margin-top: 20px;
@@ -76,36 +76,45 @@ unset($_SESSION['profile_error']);
         .detail-item {
             margin-bottom: 10px;
             padding-bottom: 10px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #d1dbed;
         }
         .detail-label {
             font-weight: bold;
-            color: #555;
+            color: #2c4268;
             display: inline-block;
             width: 120px;
         }
         .logout-btn {
-            background-color: #dc3545;
+            background-color: #e74c3c;
             color: white;
             padding: 8px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
             text-decoration: none;
             display: inline-block;
-            transition: background-color 0.3s, transform 0.2s;
+            transition: all 0.3s ease;
+            box-shadow: 4px 4px 8px #c5d1e0, 
+                        -4px -4px 8px #ffffff;
         }
         .logout-btn:hover {
-            background-color: #c82333;
-            transform: translateY(-2px);
+            background-color: #c0392b;
+            box-shadow: 2px 2px 4px #c5d1e0, 
+                        -2px -2px 4px #ffffff;
+        }
+        .logout-btn:active {
+            box-shadow: inset 2px 2px 4px #a53125, 
+                        inset -2px -2px 4px #d44637;
+            transform: translateY(2px);
         }
         .upload-form {
             margin-top: 20px;
             padding: 20px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-            border: 1px solid #eee;
+            background-color: #e6eef8;
+            border-radius: 12px;
+            box-shadow: inset 4px 4px 8px #c5d1e0, 
+                        inset -4px -4px 8px #ffffff;
         }
         .file-input-wrapper {
             position: relative;
@@ -123,17 +132,47 @@ unset($_SESSION['profile_error']);
         .file-input-button {
             display: inline-block;
             padding: 8px 16px;
-            background-color: #4CAF50;
+            background-color: #3a5683;
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 14px;
+            box-shadow: 4px 4px 8px #c5d1e0, 
+                        -4px -4px 8px #ffffff;
+            transition: all 0.3s ease;
+        }
+        .file-input-button:hover {
+            background-color: #2c4268;
+            box-shadow: 2px 2px 4px #c5d1e0, 
+                        -2px -2px 4px #ffffff;
         }
         .file-name {
             margin-left: 10px;
             font-size: 14px;
-            color: #666;
+            color: #4d5e7c;
+        }
+        .btn {
+            background-color: #3a5683;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 4px 4px 8px #c5d1e0, 
+                        -4px -4px 8px #ffffff;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background-color: #2c4268;
+            box-shadow: 2px 2px 4px #c5d1e0, 
+                        -2px -2px 4px #ffffff;
+        }
+        .btn:active {
+            box-shadow: inset 2px 2px 4px #243552, 
+                        inset -2px -2px 4px #506c9e;
+            transform: translateY(2px);
         }
     </style>
 </head>
@@ -201,7 +240,6 @@ unset($_SESSION['profile_error']);
     
     <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Display file name when selected
         document.getElementById('profile_picture').addEventListener('change', function() {
             const fileName = this.files[0] ? this.files[0].name : 'No file chosen';
             document.getElementById('file-name').textContent = fileName;
